@@ -2,7 +2,7 @@
 
 ## Team Members
 - Jose del Campo Pujante
-- Adrián Garía Sanchez
+- Adrián García Sánchez
 - Vadym Vovk
 
 # Team Name
