@@ -5,27 +5,87 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Recipe Search App</title>
         <link rel="stylesheet" href="styles.css">
+<!-- Style of page-->
+    <style>
+        body {
+            font-family: Arial;
+        }
+    </style>  
+<!-- Main-->
     </head>
     <body>
-        <header >
+        <header>
             <h1>Recipe Search Application</h1>
-            <p>Find delicious recupes by ingredient</p>
+            <p>Find delicious recipes by ingredient</p>
         </header>
-        <section>
-            <h2>Search Section</h2>
-            <form>
-                <input type="text" placeholder="Enter ingredient">
-                <button type="submit">Search</button>
-            </form>
-        </section>
-        <section>
-            <h2>Search Result</h2>
-            <div>
-                <p>Search for ingredients to see recipies</p>
-            </div>
-        </section>
-        <footer>
-            <p>Created by YOURTEAMNAME - 2025</p>
-        </footer>
-    </body>
-</html>
+<!-- About Section -->            
+<section id="about section">
+    <h2>About our App</h2>
+    <p>
+        A web application for searching meal recipes by ingredients. Users can search, view details, and save favorite recipes.
+    </p>
+    <p>
+        <strong>Target audience:</strong> University students
+    </p>
+    <p>
+        <strong>Cuisine Focus:</strong> Meat-based dishes
+    </p>
+</section>
+<br>
+<!-- Search Section -->    
+<section id="search-section">
+    <h2>Search Recipes</h2>
+    <form id="search-form">
+    <input
+        type="text"
+        id="search-input"
+        placeholder="Enter ingredient (e.g., chicken)"
+    >
+    <select id="category-filter">
+        <option value="">All Categories</option>
+        <option value="breakfast">Breakfast</option>
+        <option value="lunch">Lunch</option>
+        <option value="dinner">Dinner</option>
+    </select>
+    <button type="submit">Search</button>
+    </form>
+</section>
+<br><br><br>
+<!-- Search Result-->
+<section>
+    <header>
+    <h2>Search Result</h2>
+    </header>
+</section>
+<!-- Recipe Card 1-->
+<div class="recipe-card">
+    <h3>Honey-Soy Chicken Thighs</h3>
+    <p><strong>ingredients:</strong> 1-2 chicken thighs, soy sauce, honey/sugar, garlic</p>
+    <p><strong>Category:</strong> Dinner</p>
+    <p><strong>Time:</strong> 15 minutes</p>
+    <button>Add to Favorites ❤</button>
+</div>
+<br>
+<!-- Recipe Card 2-->
+ <div class="recipe-card">
+    <h3>Ground Beef Pasta</h3>
+    <p><strong>ingredients:</strong> 150g ground beef, pasta, tomato sauce, salt, pepper</p>
+    <p><strong>Category:</strong> Lunch</p>
+    <p><strong>Time:</strong> 12-15 minutes</p>
+    <button>Add to Favorites ❤</button>
+ </div>
+ <br>
+ <!-- Recipe Card 3-->
+ <div class="recipe-card">
+    <h3>Cheap Pork & Onion Stir-Fry</h3>
+    <p><strong>ingredients:</strong> thin sliced pork, onion, soy sauce, oil</p>
+    <p><strong>Category:</strong> Lunch</p>
+    <p><strong>Time:</strong> 10 minutes</p>
+    <button>Add to Favorites ❤</button>
+ </div>
+<br><br><br>
+<!-- Footer-->
+<footer>
+    <p>Created by<strong> |Pteranodon|</strong> - 2025</p>
+    <p>Problem Solving Project</p>
+</footer>
