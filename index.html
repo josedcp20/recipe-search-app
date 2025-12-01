@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        .container: {
-            display: flex;
-        }
-    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -17,11 +12,11 @@
     <link rel="stylesheet" href="style.css">
 <!-- Main-->
 </head>
-<body style="background-color: lightgreen";>
-    <header>
+<body>
+    <header class="site-header">
         <h1>Recipe Search Application</h1>
     </header>
-    <p>Find delicious recipes by ingredient</p>
+    <p style="text-align: center;">Find delicious recipes by ingredient</p>
 <!-- About Section -->
     <section class="about-section">
         <h2>About our App</h2>
@@ -55,34 +50,36 @@
 <!-- Search Result-->
     <section>
         <header>
-            <h2>Search Result</h2>
+            <h2 style="text-align: center;">Search Result:</h2>
         </header>
     </section>
 <!-- Recipe Card 1-->
-    <div class="recipe-card">
-        <h3>Honey-Soy Chicken Thighs</h3>
-        <p><strong>ingredients:</strong> 1-2 chicken thighs, soy sauce, honey/sugar, garlic</p>
-        <p><strong>Category:</strong> Dinner</p>
-        <p><strong>Time:</strong> 15 minutes</p>
-        <button>Add to Favorites ❤</button>
-    </div>
-    <br>
+    <div class="recipe-cards">
+        <div class="recipe-card">
+            <h3>Honey-Soy Chicken Thighs</h3>
+            <p><strong>ingredients:</strong> 1-2 chicken thighs, soy sauce, honey/sugar, garlic</p>
+            <p><strong>Category:</strong> Dinner</p>
+            <p><strong>Time:</strong> 15 minutes</p>
+            <button>Add to Favorites ❤</button>
+        </div>
+        <br>
 <!-- Recipe Card 2-->
-    <div class="recipe-card">
-        <h3>Ground Beef Pasta</h3>
-        <p><strong>ingredients:</strong> 150g ground beef, pasta, tomato sauce, salt, pepper</p>
-        <p><strong>Category:</strong> Lunch</p>
-        <p><strong>Time:</strong> 12-15 minutes</p>
-        <button>Add to Favorites ❤</button>
-    </div>
-    <br>
+        <div class="recipe-card">
+            <h3>Ground Beef Pasta</h3>
+            <p><strong>ingredients:</strong> 150g ground beef, pasta, tomato sauce, salt, pepper</p>
+            <p><strong>Category:</strong> Lunch</p>
+            <p><strong>Time:</strong> 12-15 minutes</p>
+            <button>Add to Favorites ❤</button>
+        </div>
+        <br>
 <!-- Recipe Card 3-->
-    <div class="recipe-card">
-        <h3>Cheap Pork & Onion Stir-Fry</h3>
-        <p><strong>ingredients:</strong> thin sliced pork, onion, soy sauce, oil</p>
-        <p><strong>Category:</strong> Lunch</p>
-        <p><strong>Time:</strong> 10 minutes</p>
-        <button>Add to Favorites ❤</button>
+        <div class="recipe-card">
+            <h3>Cheap Pork & Onion Stir-Fry</h3>
+            <p><strong>ingredients:</strong> thin sliced pork, onion, soy sauce, oil</p>
+            <p><strong>Category:</strong> Lunch</p>
+            <p><strong>Time:</strong> 10 minutes</p>
+            <button>Add to Favorites ❤</button>
+        </div>
     </div>
     <br><br><br>
 <!-- Footer-->

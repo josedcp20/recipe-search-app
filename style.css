@@ -1,11 +1,22 @@
 /*main*/
-header {
+.site-header {
     background-color: seagreen;
     color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+body{
+    background-color: lightgreen;
+}
+
+.container{
+    display:flex;
 }
 .about-section {
     background-color: seagreen;
     color: white;
+    text-align: center;
 }
 button {
     background-color: seagreen;
@@ -20,6 +31,13 @@ button:active {
     transform: scale(0.98);
 }
 /*recipe cards*/
+.recipe-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 15px;
+}
 .recipe-card{
     border-left: 5px solid #4CAF50;
     border-left-color: seagreen;
