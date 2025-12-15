@@ -1,4 +1,16 @@
 /*main*/
+.login-box {
+    top: 20px;
+    right: 20px;
+    text-align: right;
+    color: white;
+}
+
+.login-box button {
+    padding: 6px 10px;
+    margin-left: 6px;
+    cursor: pointer;
+}
 .site-header {
     background-color: rgb(190, 190, 190);
     color: white;

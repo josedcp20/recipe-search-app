@@ -12,6 +12,38 @@ toggle.addEventListener("click", () => {
 text.classList.toggle("hidden");
 });
 
+const loginBtn = document.getElementById('login-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const greeting = document.getElementById('user-greeting');
+const logininput = document.getElementById('login-input');
+
+function loadUser() {
+    const username = localStorage.getItem('username');
+    if (username) {
+        greeting.textContent = `Hola, ${username}`;
+        loginBtn.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+    }
+}
+
+loginBtn.addEventListener('click', () => {
+    const name = logininput.value.trim();
+    if (!name || !name.trim()) return;
+
+    localStorage.setItem('username', name.trim());
+    loadUser();
+    logininput.classList.add('hidden');
+});
+
+logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('username');
+    greeting.textContent = '';
+    logininput.value = '';
+    loginBtn.classList.remove('hidden');
+    logoutBtn.classList.add('hidden');
+    logininput.classList.remove('hidden');
+});
+
 function loadFavorites() {
     try {
         const data = localStorage.getItem('favorites');
