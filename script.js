@@ -64,12 +64,16 @@ searchForm.addEventListener("submit", function(event) {
         for (let i = 0; i < 8 && i < recipes.length; i++) {
             let recipe = recipes[i];
             html += `
-            <div class="recipe-card" data-index="${i}">
+            <div class="recipe-card" id=i>
                 <h3>${recipe.strMeal}</h3>
-                <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}">
-                <p><strong>Category:</strong> ${recipe.strCategory}</p>
+                <img src="${recipe.strMealThumb}"
+                alt="${recipe.strMeal}">
+                <p><strong>Category:</strong>
+                ${recipe.strCategory}</p>
                 <p><strong>Origin:</strong> ${recipe.strArea}</p>
+                <button id="likeButton" type="submit">LIKE</button>
             </div>
+            `;
             `;
         }
         resultsDiv.innerHTML = html;
