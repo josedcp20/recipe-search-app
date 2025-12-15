@@ -1,6 +1,7 @@
 let searchInput = document.getElementById("search-input");
 let resultsDiv = document.getElementById("search-results");
 let searchForm = document.querySelector(".search-form");
+let favDiv = document.getElementById("favorites-container");
 
 let recipes = [];
 let favorites = []; 
@@ -25,6 +26,15 @@ function saveFavorites() {
 function isFavorite(id) {
     return favorites.some(f => f.idMeal === id);
 }
+function toggleFavorite(recipe) {
+    if (isFavorite(recipe.idMeal)) {
+        favorites = favorites.filter(f => f.idMeal !== recipe.idMeal);
+    } else {
+        favorites.push(recipe);
+    }
+    saveFavorites();
+    renderFavorites();
+}
 function renderFavorites() {
     const container = document.getElementById('favorites-container');
     if (!container) return;
@@ -33,11 +43,20 @@ function renderFavorites() {
         return;
     }
     container.innerHTML = favorites.map((r, i) => `
-        <div class="favorite-card" data-id="${r.idMeal}">
-            <h4>${r.strMeal}</h4>
-            <img src="${r.strMealThumb}" alt="${r.strMeal}">
-            <p><small>${r.strCategory || ''} • ${r.strArea || ''}</small></p>
-        </div>
+        <div class="recipe-card" data-id="${r.idMeal}">
+                <h3>${r.strMeal}</h3>
+                <img src="${r.strMealThumb}"
+                alt="${r.strMeal}">
+                <p><strong>Category:</strong>
+                ${r.strCategory}</p>
+                <p><strong>Origin:</strong> ${r.strArea}</p>
+                <button 
+                    class="like-btn" 
+                    type="button" 
+                    data-id="${r.idMeal}">
+                    ${isFavorite(r.idMeal) ? 'UNLIKE' : 'LIKE'}
+                </button>
+            </div>
     `).join('');
 }
 
@@ -94,24 +113,20 @@ searchForm.addEventListener("submit", function(event) {
     });
 });
 
-resultsDiv.addEventListener('click', function (e) {
+document.addEventListener('click', function (e) {
     if (!e.target.matches('.like-btn')) return;
 
     const id = e.target.dataset.id;
-    const recipe = recipes.find(r => r.idMeal === id);
+
+    const recipe =
+        recipes.find(r => r.idMeal === id) ||
+        favorites.find(r => r.idMeal === id);
 
     if (!recipe) return;
 
-    if (isFavorite(id)) {
-        favorites = favorites.filter(f => f.idMeal !== id);
-        e.target.textContent = 'LIKE';
-    } else {
-        favorites.push(recipe);
-        e.target.textContent = 'UNLIKE';
-    }
+    toggleFavorite(recipe);
 
-    saveFavorites();
-    renderFavorites();
+    e.target.textContent = isFavorite(id) ? 'UNLIKE' : 'LIKE';
 });
 
 function showModal(recipe) {
