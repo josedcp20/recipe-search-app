@@ -12,6 +12,7 @@ body{
     background-size: cover;      /* Ajusta la imagen para cubrir toda la pantalla */
     background-repeat: no-repeat; /* Evita que se repita */
     background-position: center;
+    text-align: center;
 }
 .container{
     display:flex;
@@ -20,6 +21,16 @@ body{
     background-color: rgb(157, 157, 157);
     color: white;
     text-align: center;
+    border-radius: 33px;
+}
+.hidden {
+  display: none;
+}
+#about-toggle {
+  cursor: pointer;
+}
+#about-toggle:hover {
+  text-decoration: underline;
 }
 .search-section{
     text-align: center;

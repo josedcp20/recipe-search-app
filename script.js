@@ -1,10 +1,15 @@
-let searchButton = document.getElementById("search-button");
 let searchInput = document.getElementById("search-input");
 let resultsDiv = document.getElementById("search-results");
 let searchForm = document.querySelector(".search-form");
 
 let recipes = [];
 let favorites = []; 
+
+const toggle = document.getElementById("about-toggle");
+const text = document.getElementById("about-text");
+toggle.addEventListener("click", () => {
+text.classList.toggle("hidden");
+});
 
 function loadFavorites() {
     try {
@@ -64,14 +69,19 @@ searchForm.addEventListener("submit", function(event) {
         for (let i = 0; i < 8 && i < recipes.length; i++) {
             let recipe = recipes[i];
             html += `
-            <div class="recipe-card" id=i>
+            <div class="recipe-card" data-index="${i}">
                 <h3>${recipe.strMeal}</h3>
                 <img src="${recipe.strMealThumb}"
                 alt="${recipe.strMeal}">
                 <p><strong>Category:</strong>
                 ${recipe.strCategory}</p>
                 <p><strong>Origin:</strong> ${recipe.strArea}</p>
-                <button id="likeButton" type="submit">LIKE</button>
+                <button 
+                    class="like-btn" 
+                    type="button" 
+                    data-id="${recipe.idMeal}">
+                    ${isFavorite(recipe.idMeal) ? 'UNLIKE' : 'LIKE'}
+                </button>
             </div>
             `;
         }
@@ -84,12 +94,24 @@ searchForm.addEventListener("submit", function(event) {
     });
 });
 
-resultsDiv.addEventListener('click', function(e) {
-    const card = e.target.closest('.recipe-card');
-    if (!card) return;
-    const idx = card.dataset.index;
-    if (idx === undefined) return;
-    showModalByIndex(Number(idx));
+resultsDiv.addEventListener('click', function (e) {
+    if (!e.target.matches('.like-btn')) return;
+
+    const id = e.target.dataset.id;
+    const recipe = recipes.find(r => r.idMeal === id);
+
+    if (!recipe) return;
+
+    if (isFavorite(id)) {
+        favorites = favorites.filter(f => f.idMeal !== id);
+        e.target.textContent = 'LIKE';
+    } else {
+        favorites.push(recipe);
+        e.target.textContent = 'UNLIKE';
+    }
+
+    saveFavorites();
+    renderFavorites();
 });
 
 function showModal(recipe) {
@@ -174,7 +196,6 @@ document.getElementById('favorites-container').addEventListener('click', functio
 loadFavorites();
 renderFavorites();
 
-document.querySelector('.modal-close').addEventListener('click', closeModal);
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
 });
