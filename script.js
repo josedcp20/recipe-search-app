@@ -17,9 +17,15 @@ const logoutBtn = document.getElementById('logout-btn');
 const greeting = document.getElementById('user-greeting');
 const logininput = document.getElementById('login-input');
 
+loadUser();
+
+loadFavorites();
+renderFavorites();
+
 function loadUser() {
     const username = localStorage.getItem('username');
     if (username) {
+        logininput.classList.add('hidden');
         greeting.textContent = `Hola, ${username}`;
         loginBtn.classList.add('hidden');
         logoutBtn.classList.remove('hidden');
@@ -95,6 +101,7 @@ function renderFavorites() {
 searchForm.addEventListener("submit", function(event) {
     event.preventDefault();
     let ingredient = searchInput.value.trim();
+    searchInput.value = '';
     console.log("Searching for:", ingredient);
     if (ingredient === "") {
         resultsDiv.innerHTML = "<p>Please enter an ingredient!</p>";

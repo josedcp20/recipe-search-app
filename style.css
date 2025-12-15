@@ -125,6 +125,7 @@ h2 {
 }
 body,p {
     font-family:'Open Sans', sans-serif;;
+    color: white;
 }
 * {
     transition: all 0.3s ease;
