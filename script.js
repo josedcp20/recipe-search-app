@@ -74,7 +74,6 @@ searchForm.addEventListener("submit", function(event) {
                 <button id="likeButton" type="submit">LIKE</button>
             </div>
             `;
-            `;
         }
         resultsDiv.innerHTML = html;
     })
