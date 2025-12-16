@@ -81,20 +81,20 @@ function renderFavorites() {
         return;
     }
     container.innerHTML = favorites.map((r, i) => `
-        <div class="recipe-card" data-id="${r.idMeal}">
-                <h3>${r.strMeal}</h3>
-                <img src="${r.strMealThumb}"
-                alt="${r.strMeal}">
-                <p><strong>Category:</strong>
-                ${r.strCategory}</p>
-                <p><strong>Origin:</strong> ${r.strArea}</p>
-                <button 
-                    class="like-btn" 
-                    type="button" 
-                    data-id="${r.idMeal}">
-                    ${isFavorite(r.idMeal) ? 'UNLIKE' : 'LIKE'}
-                </button>
-            </div>
+        <div class="favorite-card recipe-card" data-id="${r.idMeal}">
+            <h3>${r.strMeal}</h3>
+            <img src="${r.strMealThumb}"
+            alt="${r.strMeal}">
+            <p><strong>Category:</strong>
+            ${r.strCategory}</p>
+            <p><strong>Origin:</strong> ${r.strArea}</p>
+            <button 
+                class="like-btn" 
+                type="button" 
+                data-id="${r.idMeal}">
+                ${isFavorite(r.idMeal) ? 'UNLIKE' : 'LIKE'}
+            </button>
+        </div>
     `).join('');
 }
 
@@ -153,9 +153,13 @@ searchForm.addEventListener("submit", function(event) {
 });
 
 document.addEventListener('click', function (e) {
-    if (!e.target.matches('.like-btn')) return;
+    const btn = e.target.closest('.like-btn');
+    if (!btn) return;
 
-    const id = e.target.dataset.id;
+    // prevent card click handlers from also opening the modal
+    e.stopPropagation();
+
+    const id = btn.dataset.id;
 
     const recipe =
         recipes.find(r => r.idMeal === id) ||
@@ -165,7 +169,7 @@ document.addEventListener('click', function (e) {
 
     toggleFavorite(recipe);
 
-    e.target.textContent = isFavorite(id) ? 'UNLIKE' : 'LIKE';
+    btn.textContent = isFavorite(id) ? 'UNLIKE' : 'LIKE';
 });
 
 function showModal(recipe) {
@@ -197,7 +201,8 @@ function showModal(recipe) {
 }
 
 function showModalByIndex(index) {
-    const recipe = recipes[index];
+    const idx = Number(index);
+    const recipe = recipes[idx];
     showModal(recipe);
 }
 
@@ -209,47 +214,59 @@ function closeModal() {
 }
 
 
-document.querySelector('.modal-close').addEventListener('click', closeModal);
-document.getElementById('recipe-modal').addEventListener('click', function(e) {
-    if (e.target.id === 'recipe-modal') closeModal();
-});
+// modal close button
+const modalClose = document.querySelector('.modal-close');
+if (modalClose) modalClose.addEventListener('click', closeModal);
+
+// modal outer click and fav button handling
+const modalEl = document.getElementById('recipe-modal');
+if (modalEl) {
+    modalEl.addEventListener('click', function(e) {
+        if (e.target.id === 'recipe-modal') return closeModal();
+        if (e.target.matches('.fav-btn')) {
+            const id = e.target.dataset.id;
+            const inFav = isFavorite(id);
+            if (inFav) {
+                favorites = favorites.filter(f => f.idMeal !== id);
+            } else {
+                let recipe = recipes.find(r => r.idMeal === id) || favorites.find(r => r.idMeal === id);
+                if (!recipe) {
+                    return;
+                }
+                favorites.push(recipe);
+            }
+            saveFavorites();
+            renderFavorites();
+            e.target.textContent = isFavorite(id) ? 'Remove from favorites' : 'Add to favorites';
+            e.target.classList.toggle('saved', isFavorite(id));
+        }
+    });
+}
+
+// close with Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
 });
 
-
-document.getElementById('recipe-modal').addEventListener('click', function(e) {
-    if (e.target.id === 'recipe-modal') closeModal();
-    if (e.target.matches('.fav-btn')) {
-        const id = e.target.dataset.id;
-        const inFav = isFavorite(id);
-        if (inFav) {
-            favorites = favorites.filter(f => f.idMeal !== id);
-        } else {
-            let recipe = recipes.find(r => r.idMeal === id) || favorites.find(r => r.idMeal === id);
-            if (!recipe) {
-                return;
-            }
-            favorites.push(recipe);
-        }
-        saveFavorites();
-        renderFavorites();
-        e.target.textContent = isFavorite(id) ? 'Remove from favorites' : 'Add to favorites';
-        e.target.classList.toggle('saved', isFavorite(id));
-    }
+// open modal when clicking a search result card (but ignore clicks on like buttons)
+resultsDiv.addEventListener('click', function(e) {
+    const card = e.target.closest('.recipe-card');
+    if (!card) return;
+    if (e.target.closest('.like-btn')) return; // don't open if like button was clicked
+    const idx = card.dataset.index;
+    if (idx !== undefined) showModalByIndex(idx);
 });
 
+// open modal from favorites list
 document.getElementById('favorites-container').addEventListener('click', function(e) {
     const card = e.target.closest('.favorite-card');
     if (!card) return;
+    if (e.target.closest('.like-btn')) return;
     const id = card.dataset.id;
     const recipe = favorites.find(r => r.idMeal === id);
     if (recipe) showModal(recipe);
 });
 
+// initial load
 loadFavorites();
 renderFavorites();
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
-});
