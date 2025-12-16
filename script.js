@@ -4,7 +4,13 @@ let searchForm = document.querySelector(".search-form");
 let favDiv = document.getElementById("favorites-container");
 
 let recipes = [];
-let favorites = []; 
+let favorites_guest = [];
+let favorites_sarah = [];
+let favorites_john = [];
+
+function getCurrentUser() {
+    return localStorage.getItem('username') || 'guest';
+}
 
 // escape HTML and preserve line breaks
 function escapeHtml(unsafe) {
@@ -68,33 +74,46 @@ function loadUser() {
 }
 
 loginBtn.addEventListener('click', () => {
+    greeting.textContent = '';
+    saveFavorites();
     const name = logininput.value.trim();
     if (!name || !name.trim()) return;
-
+    if (name != "sarah" && name != "john") {
+        greeting.textContent = "Not a valid username, try again.";
+        logininput.value = '';
+        return;
+    }
     localStorage.setItem('username', name.trim());
     loadUser();
+    loadFavorites();
+    renderFavorites();
     logininput.classList.add('hidden');
 });
 
 logoutBtn.addEventListener('click', () => {
+    saveFavorites();
     localStorage.removeItem('username');
     greeting.textContent = '';
     logininput.value = '';
     loginBtn.classList.remove('hidden');
     logoutBtn.classList.add('hidden');
     logininput.classList.remove('hidden');
+    loadFavorites();
+    renderFavorites();
 });
 
 function loadFavorites() {
+    const user = getCurrentUser();
     try {
-        const data = localStorage.getItem('favorites');
+        const data = localStorage.getItem(`favorites_${user}`);
         favorites = data ? JSON.parse(data) : [];
     } catch (e) {
         favorites = [];
     }
 }
 function saveFavorites() {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
+    const user = getCurrentUser();
+    localStorage.setItem(`favorites_${user}`, JSON.stringify(favorites));
 }
 function isFavorite(id) {
     return favorites.some(f => f.idMeal === id);
@@ -217,7 +236,7 @@ function showModal(recipe) {
             ingredients.push({ ing: ing.trim(), meas: (meas || '').trim() });
         }
     }
-    const favText = isFavorite(recipe.idMeal) ? 'Remove from favorites' : 'Add to favorites';
+    const favText = isFavorite(recipe.idMeal) ? 'UNLIKE' : 'LIKE';
     const favClass = isFavorite(recipe.idMeal) ? 'fav-btn saved' : 'fav-btn';
 
     const instructionSteps = getInstructionSteps(recipe.strInstructions);
@@ -282,7 +301,7 @@ if (modalEl) {
             }
             saveFavorites();
             renderFavorites();
-            e.target.textContent = isFavorite(id) ? 'Remove from favorites' : 'Add to favorites';
+            e.target.textContent = isFavorite(id) ? 'UNLIKE' : 'LIKE';
             e.target.classList.toggle('saved', isFavorite(id));
         }
     });
