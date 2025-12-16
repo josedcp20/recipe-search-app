@@ -6,6 +6,41 @@ let favDiv = document.getElementById("favorites-container");
 let recipes = [];
 let favorites = []; 
 
+// escape HTML and preserve line breaks
+function escapeHtml(unsafe) {
+    if (!unsafe) return '';
+    return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+function formatInstructions(text) {
+    const safe = escapeHtml(text || 'No instructions available.');
+    return safe.replace(/\r\n|\n|\r/g, '<br>');
+}
+function getIngredientsHtml(recipe) {
+    const items = [];
+    for (let i = 1; i <= 20; i++) {
+        const ing = recipe[`strIngredient${i}`];
+        const meas = recipe[`strMeasure${i}`];
+        if (ing && ing.trim() !== '') {
+            const text = (meas ? `${escapeHtml(meas.trim())} ` : '') + escapeHtml(ing.trim());
+            items.push(`<li>${text}</li>`);
+        }
+    }
+    return items.length ? items.join('') : '<li>No ingredients listed.</li>';
+}
+
+// split instructions into numbered steps
+function getInstructionSteps(text) {
+    if (!text) return ['No instructions available.'];
+    return String(text)
+        .split(/\r\n|\n|\r/)
+        .map(s => s.trim())
+        .filter(s => s.length);
+}
 const toggle = document.getElementById("about-toggle");
 const text = document.getElementById("about-text");
 toggle.addEventListener("click", () => {
@@ -179,19 +214,29 @@ function showModal(recipe) {
         const ing = recipe[`strIngredient${i}`];
         const meas = recipe[`strMeasure${i}`];
         if (ing && ing.trim() !== "") {
-            ingredients.push(`${meas ? meas.trim()+' ' : ''}${ing.trim()}`);
+            ingredients.push({ ing: ing.trim(), meas: (meas || '').trim() });
         }
     }
     const favText = isFavorite(recipe.idMeal) ? 'Remove from favorites' : 'Add to favorites';
     const favClass = isFavorite(recipe.idMeal) ? 'fav-btn saved' : 'fav-btn';
+
+    const instructionSteps = getInstructionSteps(recipe.strInstructions);
+    const instructionsHtml = instructionSteps.length
+        ? `<ol class="modal-instructions">${instructionSteps.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ol>`
+        : `<p class="modal-instructions">${escapeHtml(recipe.strInstructions || 'No instructions available.')}</p>`;
+
+    const ingredientsHtml = ingredients.length
+        ? ingredients.map(it => `<li><span class="ingredient-measure">${escapeHtml(it.meas)}</span><span class="ingredient-name">${escapeHtml(it.ing)}</span></li>`).join('')
+        : '<li>No ingredients listed.</li>';
+
     const html = `
-        <h2>${recipe.strMeal}</h2>
-        <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}" style="max-width:100%;border-radius:8px;margin-top:12px;">
+        <h2>${escapeHtml(recipe.strMeal)}</h2>
+        <img src="${recipe.strMealThumb}" alt="${escapeHtml(recipe.strMeal)}" style="max-width:100%;border-radius:8px;margin-top:12px;">
         <button class="${favClass}" data-id="${recipe.idMeal}">${favText}</button>
         <h3>Ingredients</h3>
-        <ul class="modal-ingredients">${ingredients.map(it => `<li>${it}</li>`).join('')}</ul>
+        <ul class="modal-ingredients">${ingredientsHtml}</ul>
         <h3>Instructions</h3>
-        <p>${recipe.strInstructions || 'No instructions available.'}</p>
+        ${instructionsHtml}
     `;
     const modal = document.getElementById('recipe-modal');
     document.getElementById('modal-body').innerHTML = html;
@@ -248,20 +293,22 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
 });
 
-// open modal when clicking a search result card (but ignore clicks on like buttons)
+// open modal only when clicking the image inside a result card
 resultsDiv.addEventListener('click', function(e) {
-    const card = e.target.closest('.recipe-card');
+    const img = e.target.closest('.recipe-card img');
+    if (!img) return; // only open from image clicks
+    const card = img.closest('.recipe-card');
     if (!card) return;
-    if (e.target.closest('.like-btn')) return; // don't open if like button was clicked
     const idx = card.dataset.index;
     if (idx !== undefined) showModalByIndex(idx);
 });
 
-// open modal from favorites list
+// open modal from favorites list only when clicking the image
 document.getElementById('favorites-container').addEventListener('click', function(e) {
-    const card = e.target.closest('.favorite-card');
+    const img = e.target.closest('.favorite-card img');
+    if (!img) return;
+    const card = img.closest('.favorite-card');
     if (!card) return;
-    if (e.target.closest('.like-btn')) return;
     const id = card.dataset.id;
     const recipe = favorites.find(r => r.idMeal === id);
     if (recipe) showModal(recipe);

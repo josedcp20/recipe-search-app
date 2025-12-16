@@ -92,6 +92,26 @@ button:active {
     font-size: 22px;
     margin-bottom: 12px;
 }
+/* ensure headings inside cards are visible (page headings are white) */
+.recipe-card h3, .recipe-card h4 {
+    color: #333;
+}
+/* ingredients and instructions in cards */
+.card-ingredients {
+    text-align: left;
+    padding-left: 18px;
+    margin: 8px 0;
+    color: #444;
+}
+.card-ingredients li {
+    margin-bottom: 6px;
+}
+.card-instructions {
+    text-align: left;
+    color: #444;
+    margin-top: 8px;
+    white-space: pre-wrap; /* preserve line breaks */
+}
 .recipe-card p {
     color: #666;
     line-height: 1.6;
@@ -188,5 +208,71 @@ a:hover {
     cursor: pointer;
 }
 .modal-ingredients {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 12px;
+    list-style: none;
+    padding: 0;
+    margin: 8px 0;
+}
+.modal-ingredients li {
+    background: #f6faf6;
+    color: #2d2d2d;
+    padding: 8px 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+.ingredient-measure {
+    font-weight: 700;
+    color: #2f6b4a;
+    min-width: 60px;
     text-align: left;
+}
+.ingredient-name {
+    flex: 1;
+    text-align: left;
+}
+
+.modal-instructions {
+    color: #333;
+    text-align: left;
+    margin-top: 12px;
+    padding: 0;
+    list-style: none;
+    padding-left: 0;
+    counter-reset: step;
+}
+.modal-instructions li {
+    margin-bottom: 12px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 8px;
+    line-height: 1.6;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    position: relative;
+    padding-left: 44px;
+}
+.modal-instructions li::before {
+    content: counter(step);
+    counter-increment: step;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: seagreen;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight:700;
+}
+
+.modal h3{
+    color: seagreen;
 }
