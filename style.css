@@ -24,6 +24,7 @@ body{
     background-size: cover;      /* Ajusta la imagen para cubrir toda la pantalla */
     background-repeat: no-repeat; /* Evita que se repita */
     background-position: center;
+    background-attachment: fixed;
     text-align: center;
 }
 .container{
