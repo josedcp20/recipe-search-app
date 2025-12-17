@@ -336,3 +336,11 @@ document.getElementById('favorites-container').addEventListener('click', functio
 // initial load
 loadFavorites();
 renderFavorites();
+
+if (typeof module !== "undefined") {
+    module.exports = {
+        getCurrentUser,
+        isFavorite,
+        toggleFavorite
+    };
+}
