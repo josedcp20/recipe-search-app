@@ -47,6 +47,20 @@ function getInstructionSteps(text) {
         .map(s => s.trim())
         .filter(s => s.length);
 }
+
+// determine if a recipe is meat-based
+function isMeatBased(recipe) {
+    if (!recipe) return false;
+    const meatWords = ['beef','chicken','pork','lamb','turkey','veal','bacon','ham','sausage','goat','mutton','chorizo','salami','steak'];
+    const cat = (recipe.strCategory || '').toLowerCase();
+    if (meatWords.some(w => cat.includes(w))) return true;
+    for (let i = 1; i <= 20; i++) {
+        const ing = (recipe[`strIngredient${i}`] || '').toLowerCase();
+        if (meatWords.some(w => ing.includes(w))) return true;
+    }
+    return false;
+}
+
 const toggle = document.getElementById("about-toggle");
 const text = document.getElementById("about-text");
 toggle.addEventListener("click", () => {
@@ -176,7 +190,17 @@ searchForm.addEventListener("submit", function(event) {
             resultsDiv.innerHTML = "<p>No recipes found. Try another ingredient!</p>";
             return;
         }
-        recipes = data.meals;
+        // apply meat-based filter (always active)
+        const meals = data.meals || [];
+        const filtered = meals.filter(isMeatBased);
+        console.log(`Filtered meals: ${filtered.length} of ${meals.length}`);
+        if (filtered.length === 0) {
+            recipes = [];
+            resultsDiv.innerHTML = "<p>No meat-based recipes found. Try another ingredient!</p>";
+            return;
+        }
+
+        recipes = filtered;
         let html = "";
         for (let i = 0; i < 8 && i < recipes.length; i++) {
             let recipe = recipes[i];
